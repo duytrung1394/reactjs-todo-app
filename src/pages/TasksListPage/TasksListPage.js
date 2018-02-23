@@ -6,7 +6,7 @@ import Search from '../../components/Control/Search';
 import Sort from '../../components/Control/Sort';
 import Filter from './../../components/Filter/Filter';
 import { connect } from 'react-redux';
-import { actlistAllTasksRequest, actDelTaskRequest, actFilterTable, actSearchTask } from './../../actions/index';
+import { actlistAllTasksRequest, actDelTaskRequest, actFilterTable, actSearchTask, actSortTasks } from './../../actions/index';
 
 class TasksListPage extends Component {
 
@@ -14,28 +14,39 @@ class TasksListPage extends Component {
         // call dispatch(actlistAllTasksRequest())
         this.props.onListAll();
     }
+
     onClickDelItem = (id) => {
         // dispatch(actDelTaskRequest(id))
         this.props.onDelItem(id);
     }
+
     onFilterTable = (filter) =>{
-        this.props.onFilter(filter)
+        this.props.onFilter(filter);
     }
+
     onSearchTask = (search) => {
         this.props.onSearchTask(search);
     }
+
+    onSortTasks = (sort) => {
+        this.props.onSortTasks(sort);
+    }
     render() {
-        let { tasks, filter, search } = this.props;
-        // console.log(tasks);
+        let { tasks, filter, search, sort } = this.props;
+        // console.log(sort);
         tasks = this.filterTable(tasks, filter);
+        
         tasks = this.searchTask(tasks, search);
+
+        tasks = this.sortTasks(tasks, sort);
+        
         return (
             <React.Fragment>
                 <Control>
-                    <Search onSearch={this.onSearchTask}>
-                    </Search>
-                    <Sort>
-                    </Sort>
+                    <Search onSearch={this.onSearchTask} />
+                    
+                    <Sort onSort={this.onSortTasks} sort={sort} />
+
                 </Control>
                 <TasksList>
                     <Filter onFilterTable={this.onFilterTable} />
@@ -91,21 +102,40 @@ class TasksListPage extends Component {
             });
             return tasks;
         }
-    } 
+    }
+    // sort func
+    sortTasks = (tasks, sort) => {
+        if(sort.by === "name"){
+            tasks = tasks.sort( (a, b) =>{
+                if( a.name > b.name) return sort.dir;
+                else if(a.name < b.name) return -sort.dir;
+                else return 0;
+            });
+        }
+        if(sort.by === "level"){
+            tasks = tasks.sort( (a, b) => {
+                if(a.level > b.level) return sort.dir;
+                else if(a.level < b.level) return -sort.dir;
+                else return 0;
+            });
+        }
+        return tasks;
+    }
 }
 
 const mapStateToProps = (state) => {
     return {
         tasks : state.tasks,
         filter: state.filter,
-        search: state.search
+        search: state.search,
+        sort: state.sort
     }
 }
 
 const mapDispatchToProps = (dispatch, props) => {
     return {
         onListAll: () => {
-            dispatch(actlistAllTasksRequest());
+            dispatch(actlistAllTasksRequest())
         },
         onDelItem: (id) => {
             dispatch(actDelTaskRequest(id))
@@ -115,6 +145,9 @@ const mapDispatchToProps = (dispatch, props) => {
         },
         onSearchTask: (txtSearch) => {
             dispatch(actSearchTask(txtSearch))
+        },
+        onSortTasks: (sort) => {
+            dispatch(actSortTasks(sort))
         }
     }
 }

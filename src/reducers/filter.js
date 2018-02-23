@@ -5,7 +5,7 @@ var initialState = {
     level: -1
 };
 
-const editingTask = (state = initialState, action) => {
+const filter = (state = initialState, action) => {
     switch (action.type) {
         case Types.FILTER_TABLE:
             return action.filter;
@@ -13,4 +13,4 @@ const editingTask = (state = initialState, action) => {
             return state;
     }
 }
-export default editingTask;
+export default filter;

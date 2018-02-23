@@ -91,3 +91,10 @@ export const actSearchTask = (txtSearch) => {
         txtSearch
     }
 }
+
+export const actSortTasks = (sort) => {
+    return {
+        type: Types.SORT_TASKS,
+        sort
+    }
+}
