@@ -83,3 +83,11 @@ export const actFilterTable = (filter) => {
         filter
     }
 }
+
+// search
+export const actSearchTask = (txtSearch) => {
+    return {
+        type: Types.SEARCH_TASK,
+        txtSearch
+    }
+}
