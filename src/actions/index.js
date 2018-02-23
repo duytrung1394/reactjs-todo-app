@@ -75,3 +75,11 @@ export const actUpdateTaskRequest = (task) => {
         })
     }
 }
+
+// filter a table
+export const actFilterTable = (filter) => {
+    return {
+        type: Types.FILTER_TABLE,
+        filter
+    }
+}

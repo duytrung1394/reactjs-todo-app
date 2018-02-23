@@ -4,16 +4,9 @@ import TaskItem from '../../components/TaskItem/TaskItem';
 import Control from '../../components/Control/Control';
 import Filter from './../../components/Filter/Filter';
 import { connect } from 'react-redux';
-import { actlistAllTasksRequest, actDelTaskRequest} from './../../actions/index';
+import { actlistAllTasksRequest, actDelTaskRequest, actFilterTable } from './../../actions/index';
 
 class TasksListPage extends Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            tasks: []
-        }
-    }
 
     componentDidMount() {
         // call dispatch(actlistAllTasksRequest())
@@ -23,19 +16,46 @@ class TasksListPage extends Component {
         // dispatch(actDelTaskRequest(id))
         this.props.onDelItem(id);
     }
-    
+    onFilterTable = (filter) =>{
+        this.props.onFilter(filter)
+    }
+
     render() {
-        let { tasks } = this.props;
+        let { tasks, filter } = this.props;
         // console.log(tasks);
+        tasks = this.filterTable(tasks, filter);
+
         return (
             <React.Fragment>
                 <Control />
                 <TasksList>
-                    <Filter />
+                    <Filter onFilterTable={this.onFilterTable} />
                     {this.showTasksList(tasks)}
                 </TasksList>
             </React.Fragment>
         );
+    }
+
+    filterTable = (tasks, filter) => {
+        if(filter){
+            
+            if(filter.name){
+                tasks = tasks.filter( (task) => {
+                    return task.name.toLowerCase().indexOf(filter.name.toLowerCase()) !== -1;
+                })
+            }
+            // filter level
+            tasks = tasks.filter( (task) => {
+                if(filter.level === -1){
+                    return task;
+                }else{
+                    return task.level === filter.level;
+                }
+            })
+            
+        }
+        
+        return tasks;
     }
 
     showTasksList = (tasks) => {
@@ -57,7 +77,8 @@ class TasksListPage extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        tasks : state.tasks
+        tasks : state.tasks,
+        filter: state.filter
     }
 }
 
@@ -68,6 +89,9 @@ const mapDispatchToProps = (dispatch, props) => {
         },
         onDelItem: (id) => {
             dispatch(actDelTaskRequest(id))
+        },
+        onFilter: (filter) => {
+            dispatch(actFilterTable(filter))
         }
     }
 }
