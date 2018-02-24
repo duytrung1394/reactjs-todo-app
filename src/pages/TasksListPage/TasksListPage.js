@@ -49,7 +49,7 @@ class TasksListPage extends Component {
 
                 </Control>
                 <TasksList>
-                    <Filter onFilterTable={this.onFilterTable} />
+                    <Filter onFilterTable={this.onFilterTable} filter={filter} />
                     {this.showTasksList(tasks)}
                 </TasksList>
             </React.Fragment>

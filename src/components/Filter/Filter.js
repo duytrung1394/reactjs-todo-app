@@ -9,6 +9,13 @@ class Filter extends Component {
             level: -1
         }
     }
+    componentWillMount() {
+        let { filter } = this.props;
+        this.setState({
+            name : filter.name,
+            level : filter.level
+        })
+    }
     handleChange = (event) => {
         let target = event.target;
         let name = target.name;
@@ -39,7 +46,7 @@ class Filter extends Component {
                 <td>
                     <select className="form-control"
                             name='level'
-                            value={this.state.value}
+                            value={this.state.level}
                             onChange={this.handleChange}
                         >
                         <option value={-1}>Tất cả</option>
