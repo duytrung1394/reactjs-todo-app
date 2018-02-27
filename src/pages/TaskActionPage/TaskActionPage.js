@@ -28,7 +28,6 @@ class TaskActionPage extends Component {
         e.preventDefault();
         let { txtName, sltLevel, id } = this.state;
         let { onAddTask, history, match, onUpdateTask } = this.props;
-
         let task = {
             id: id,
             name: txtName,
@@ -37,6 +36,7 @@ class TaskActionPage extends Component {
         
         if(match) {
             // call dispatch(actUpdateTaskRequest)
+            
             onUpdateTask(task);
         }else{
             // call dispatch(actAddTaskRequest)
